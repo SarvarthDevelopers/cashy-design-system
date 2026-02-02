@@ -15,6 +15,8 @@ const meta: Meta<typeof Input> = {
         },
         error: { control: 'boolean' },
         disabled: { control: 'boolean' },
+        leftIcon: { table: { disable: true } },
+        rightIcon: { table: { disable: true } },
     },
     decorators: [
         (Story) => (
