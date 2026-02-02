@@ -46,13 +46,10 @@ const preview: Preview = {
             document.body.style.backgroundColor = bgColor;
             document.body.style.color = theme === 'dark' ? '#FFFFFF' : '#131518';
 
-            return parse(Story());
+            return Story();
         },
     ],
 };
-
-// Helper to make the decorator compatible with React nodes if needed
-const parse = (story: any) => story;
 
 export default preview;
 

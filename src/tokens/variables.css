@@ -3,7 +3,7 @@
 
 :root {
   /* --- Primitives --- */
-  
+
   /* Colors */
   --white: #FFFFFF;
   --gray-50: #FBFCFC;
@@ -242,7 +242,7 @@
 
 
   /* --- Semantic Tokens (Light/Default) --- */
-  
+
   /* Colors */
   --background-primary: var(--white);
   --background-hover: var(--gray-50);

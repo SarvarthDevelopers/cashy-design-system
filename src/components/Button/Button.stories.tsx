@@ -15,7 +15,7 @@ const meta: Meta<typeof Button> = {
         layout: 'centered',
         design: {
             type: 'figma',
-            url: 'https://www.figma.com/file/Example?node-id=21%3A3762',
+            url: 'https://www.figma.com/design/SgNdO2YmHiOGzsGwy1ZHWN/CASHY-Design-System-Kit?node-id=21-3762&t=JL116qCGQBMLHtwl-4',
         },
     },
     tags: [],
