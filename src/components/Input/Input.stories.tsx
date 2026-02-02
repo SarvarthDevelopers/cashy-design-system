@@ -16,6 +16,13 @@ const meta: Meta<typeof Input> = {
         error: { control: 'boolean' },
         disabled: { control: 'boolean' },
     },
+    decorators: [
+        (Story) => (
+            <div style={{ width: '400px', maxWidth: '100%' }}>
+                <Story />
+            </div>
+        ),
+    ],
 };
 
 export default meta;

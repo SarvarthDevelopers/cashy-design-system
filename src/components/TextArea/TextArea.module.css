@@ -21,6 +21,13 @@
     border-radius: var(--radius-200);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
+    box-sizing: border-box;
+}
+
+.inputWrapper *,
+.inputWrapper *::before,
+.inputWrapper *::after {
+    box-sizing: border-box;
 }
 
 .inputWrapper:hover:not(.disabled):not(.error) {
@@ -46,8 +53,10 @@
     flex: 1;
     border: none;
     background: transparent;
-    padding: var(--space-200) var(--space-300);
-    font-size: var(--body-size-medium);
+    padding: var(--space-300) var(--space-400);
+    /* 12px 16px */
+    font-size: var(--body-size-large);
+    /* 14px */
     color: var(--text-primary);
     width: 100%;
     outline: none;

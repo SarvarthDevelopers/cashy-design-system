@@ -17,6 +17,13 @@ const meta: Meta<typeof TextArea> = {
         disabled: { control: 'boolean' },
         rows: { control: 'number' },
     },
+    decorators: [
+        (Story) => (
+            <div style={{ width: '400px', maxWidth: '100%' }}>
+                <Story />
+            </div>
+        ),
+    ],
 };
 
 export default meta;
