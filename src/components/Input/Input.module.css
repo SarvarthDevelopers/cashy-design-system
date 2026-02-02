@@ -7,9 +7,10 @@
 }
 
 .label {
-    font-size: var(--body-size-small);
+    font-size: var(--body-size-medium);
+    /* 12px */
     font-weight: var(--weight-medium);
-    color: var(--text-primary);
+    color: var(--text-subtle);
     line-height: 1.5;
 }
 
@@ -86,13 +87,13 @@
 }
 
 .helperText {
-    font-size: var(--body-size-small);
-    color: var(--text-subtle);
+    font-size: var(--body-size-medium);
+    color: var(--text-subtlest);
     margin-top: var(--space-050);
 }
 
 .errorMessage {
-    font-size: var(--body-size-small);
+    font-size: var(--body-size-medium);
     color: var(--text-error);
     margin-top: var(--space-050);
 }
