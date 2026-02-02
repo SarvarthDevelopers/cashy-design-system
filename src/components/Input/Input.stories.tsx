@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from './Input';
+import { Input, type InputProps } from './Input';
 
 // Icon components
 const SearchIcon = () => (
@@ -16,7 +16,13 @@ const DollarIcon = () => (
     </svg>
 );
 
-const meta: Meta<typeof Input> = {
+// Extend InputProps with Storybook-only args
+type StoryArgs = InputProps & {
+    showLeftIcon?: boolean;
+    showRightIcon?: boolean;
+};
+
+const meta: Meta<StoryArgs> = {
     title: 'Components/Input',
     component: Input,
     parameters: {
@@ -60,7 +66,7 @@ const meta: Meta<typeof Input> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Input>;
+type Story = StoryObj<StoryArgs>;
 
 // --- Base Input ---
 export const Base: Story = {
