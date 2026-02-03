@@ -1,17 +1,6 @@
-import React, { createContext, useContext, useId, useState } from 'react';
+import React, { useId, useState } from 'react';
+import { RadioContext } from './RadioContext';
 import './Radio.css';
-
-interface RadioContextValue {
-    name: string;
-    value?: string | number;
-    onChange?: (value: string | number) => void;
-    disabled?: boolean;
-    size?: 'small' | 'medium' | 'large';
-}
-
-const RadioContext = createContext<RadioContextValue | null>(null);
-
-export const useRadioContext = () => useContext(RadioContext);
 
 export interface RadioGroupProps {
     /**

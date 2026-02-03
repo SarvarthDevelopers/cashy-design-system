@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { useRadioContext } from './RadioGroup';
+import { useRadioContext } from './RadioContext';
 import './Radio.css';
 
 export interface RadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'onChange'> {
