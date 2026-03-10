@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
 
+export interface HeaderNavItem {
+  label: string;
+  onClick?: () => void;
+  href?: string;
+}
+
 export interface HeaderDesktopProps {
   /**
    * Optional custom class name for the root outer container.
@@ -12,7 +18,7 @@ export interface HeaderDesktopProps {
   /**
    * The list of navigation items displayed in the center menu area.
    */
-  navItems?: { label: string; onClick?: () => void; href?: string }[];
+  navItems?: HeaderNavItem[];
   /**
    * Action buttons rendered on the right side.
    * Based on the design, it contains a primary button and up to 3 icon buttons.

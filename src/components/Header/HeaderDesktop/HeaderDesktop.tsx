@@ -1,6 +1,6 @@
 import React from 'react';
 import './HeaderDesktop.css';
-import type { HeaderDesktopProps } from './types';
+import type { HeaderDesktopProps, HeaderNavItem } from './types';
 
 export const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
   className = '',
@@ -21,7 +21,7 @@ export const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
 
         {navItems.length > 0 && (
           <nav className="cashy-header-nav">
-            {navItems.map((item: any, index: number) => (
+            {navItems.map((item: HeaderNavItem, index: number) => (
               <a
                 key={index}
                 href={item.href}
