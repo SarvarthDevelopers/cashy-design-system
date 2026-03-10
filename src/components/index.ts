@@ -4,3 +4,4 @@ export * from './Radio/Radio';
 export * from './Radio/RadioGroup';
 export * from './Radio/RadioContext';
 export * from './Checkbox/Checkbox';
+export * from './Header';
