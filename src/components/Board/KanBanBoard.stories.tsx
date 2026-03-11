@@ -44,13 +44,13 @@ const DummyColumn: React.FC<DummyColumnProps> = ({
       <ColumnHeader title={title} count={count} variant={variant} />
     </div>
     <div className="cashy-kanban-column-body">
-      {/* Additional content like Cards would go here in the future - testing dynamic height stretch */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {/* Dynamically render cards based on the column's count property */}
+      {Array.from({ length: count }).map((_, i) => (
         <div 
           key={`dummy-card-${i}`} 
           style={{ 
             minHeight: '96px', 
-            width: '264px',
+            width: '100%',
             backgroundColor: 'var(--background-secondary, #F4F5F7)', 
             borderRadius: 'var(--radius-200, 8px)', 
             border: '1px solid var(--border-primary, #E2E8F0)',
