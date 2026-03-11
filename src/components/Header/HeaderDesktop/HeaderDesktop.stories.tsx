@@ -6,7 +6,7 @@ import { SettingsIcon } from '../icons/SettingsIcon';
 import { LogoutIcon } from '../icons/LogoutIcon';
 
 const meta = {
-  title: 'Components/HeaderDesktop',
+  title: 'Components/Header/HeaderDesktop',
   component: HeaderDesktop,
   parameters: {
     layout: 'fullscreen',
