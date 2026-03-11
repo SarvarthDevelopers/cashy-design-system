@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { HeaderDesktop } from './HeaderDesktop';
+import CashyLogoUrl from '../../../../logo/Cashy_Logo_White.svg';
+import { HelpIcon } from '../icons/HelpIcon';
+import { SettingsIcon } from '../icons/SettingsIcon';
+import { LogoutIcon } from '../icons/LogoutIcon';
 
 const meta = {
   title: 'Components/HeaderDesktop',
@@ -30,41 +34,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// --- Placeholder SVGs from Figma Extraction (Mock data) ---
+// Remove mocked MockLogoSVG and MockIconSVG definitions
 
-const MockLogoSVG = () => (
-  // Visual placeholder for "Cashy Logo", preserving the exact space from Figma extraction
-  // Figma dimensions 87x26
-  <svg width="87" height="26" viewBox="0 0 87 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="87" height="26" fill="#131518" />
-    <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="white" fontFamily="Inter" fontSize="12px" fontWeight="600">
-      Logo
-    </text>
-  </svg>
-);
-
-const MockIconSVG = () => (
-  // Visual placeholder for the 20x20 Figma action icons
-  <div className="cashy-header-icon-wrapper">
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="10" cy="10" r="9" stroke="#8A95A6" strokeWidth="2"/>
-    </svg>
-  </div>
-);
-
-const MockIconActionButtons = () => (
+const ActionButtons = () => (
    <>
-      <button className="cashy-header-icon-btn" aria-label="Action 1">
-        <MockIconSVG />
+      <button className="cashy-header-icon-btn" aria-label="Help">
+        <HelpIcon width="20" height="20" />
       </button>
-      <button className="cashy-header-icon-btn" aria-label="Action 2">
-        <MockIconSVG />
+      <button className="cashy-header-icon-btn" aria-label="Settings">
+        <SettingsIcon width="20" height="20" />
       </button>
-      <button className="cashy-header-icon-btn" aria-label="Action 3">
-        <MockIconSVG />
+      <button className="cashy-header-icon-btn" aria-label="Logout">
+        <LogoutIcon width="20" height="20" />
       </button>
    </>
 );
+
 
 const defaultNavItems = [
   { label: 'Deals', href: '#' },
@@ -75,16 +60,16 @@ const defaultNavItems = [
 
 export const ConfigurableHeader: Story = {
   args: {
-    logo: <MockLogoSVG />,
+    logo: <img src={CashyLogoUrl} alt="Cashy Logo" style={{ width: '100%', height: '100%', display: 'block' }} />,
     navItems: defaultNavItems,
     primaryAction: <span>Create a Deal</span>,
-    actions: <MockIconActionButtons />,
+    actions: <ActionButtons />,
   },
 };
 
 export const HeaderWithoutActions: Story = {
   args: {
-    logo: <MockLogoSVG />,
+    logo: <img src={CashyLogoUrl} alt="Cashy Logo" style={{ width: '100%', height: '100%', display: 'block' }} />,
     navItems: defaultNavItems,
     primaryAction: <span>Create a Deal</span>,
   },
@@ -92,9 +77,9 @@ export const HeaderWithoutActions: Story = {
 
 export const HeaderWithoutNav: Story = {
   args: {
-    logo: <MockLogoSVG />,
+    logo: <img src={CashyLogoUrl} alt="Cashy Logo" style={{ width: '100%', height: '100%', display: 'block' }} />,
     navItems: [],
     primaryAction: <span>Create a Deal</span>,
-    actions: <MockIconActionButtons />,
+    actions: <ActionButtons />,
   },
 };
