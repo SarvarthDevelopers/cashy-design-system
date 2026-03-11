@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useArgs } from '@storybook/preview-api';
 import { Radio } from './Radio';
 import { RadioGroup } from './RadioGroup';
 
@@ -90,14 +91,24 @@ export const Disabled: Story = {
     },
 };
 
-// Story demonstrating controlled state
-export const Controlled = () => {
-    // Note: Storybook stories ideally shouldn't use hooks directly in the export object 
-    // unless using the 'render' function.
-    return (
-        <RadioGroup value="2" name="controlled" onChange={() => { }}>
-            <Radio value="1" label="Controlled 1" />
-            <Radio value="2" label="Controlled 2 (Selected)" />
-        </RadioGroup>
-    );
+// Story demonstrating controlled state via standard useArgs API
+export const Controlled: Story = {
+    args: {
+        value: '2',
+        name: 'controlled',
+        children: <></>, // Dummy payload to satisfy TS requirement structure, overridden in render function
+    },
+    render: function Render(args) {
+        const [, updateArgs] = useArgs();
+        const onChange = (newValue: string) => {
+            updateArgs({ value: newValue });
+            args.onChange?.(newValue);
+        };
+        return (
+            <RadioGroup {...args} onChange={onChange}>
+                <Radio value="1" label="Controlled 1" />
+                <Radio value="2" label="Controlled 2 (Selected)" />
+            </RadioGroup>
+        );
+    },
 };

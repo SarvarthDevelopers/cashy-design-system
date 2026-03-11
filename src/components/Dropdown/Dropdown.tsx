@@ -6,9 +6,10 @@ export interface DropdownOption {
     value: string;
 }
 
-export interface DropdownProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange'> {
+export interface DropdownProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'defaultValue' | 'onChange'> {
     options: DropdownOption[];
     value?: string;
+    defaultValue?: string;
     onChange?: (value: string) => void;
     placeholder?: string;
     label?: string;
@@ -18,9 +19,13 @@ export interface DropdownProps extends Omit<React.ButtonHTMLAttributes<HTMLButto
 }
 
 export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
-    ({ options, value, onChange, placeholder = 'Select an option', label, error, errorMessage, helperText, disabled, className, ...props }, ref) => {
+    ({ options, value, defaultValue, onChange, placeholder = 'Select an option', label, error, errorMessage, helperText, disabled, className, ...props }, ref) => {
         const [isOpen, setIsOpen] = useState(false);
+        const [internalValue, setInternalValue] = useState(defaultValue);
         const containerRef = useRef<HTMLDivElement>(null);
+
+        const isControlled = typeof value !== 'undefined';
+        const currentValue = isControlled ? value : internalValue;
 
         const generatedId = React.useId();
         const buttonId = props.id || generatedId;
@@ -29,7 +34,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
         const errorId = errorMessage ? `${buttonId}-error` : undefined;
         const describedBy = [helperId, errorId].filter(Boolean).join(' ');
 
-        const selectedOption = options.find((opt) => opt.value === value);
+        const selectedOption = options.find((opt) => opt.value === currentValue);
 
         useEffect(() => {
             const handleClickOutside = (event: MouseEvent) => {
@@ -53,6 +58,9 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
         const handleSelect = (optionValue: string, e: React.MouseEvent) => {
             e.stopPropagation();
             if (!disabled) {
+                if (!isControlled) {
+                    setInternalValue(optionValue);
+                }
                 onChange?.(optionValue);
                 setIsOpen(false);
             }
@@ -108,7 +116,7 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
                 {isOpen && (
                     <div id={listboxId} className={styles.dropdownList} role="listbox">
                         {options.map((option) => {
-                            const isSelected = option.value === value;
+                            const isSelected = option.value === currentValue;
                             return (
                                 <button
                                     key={option.value}

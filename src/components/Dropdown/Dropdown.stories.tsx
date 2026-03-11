@@ -1,23 +1,7 @@
-import { useState, useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { expect, userEvent, within, fn, waitFor } from '@storybook/test';
+import { useArgs } from '@storybook/preview-api';
 import { Dropdown } from './Dropdown';
-
-const DropdownWrapper = (args: import('react').ComponentProps<typeof Dropdown>) => {
-    const [value, setValue] = useState(args.value);
-    
-    // Sync with controls
-    useEffect(() => {
-        setValue(args.value);
-    }, [args.value]);
-
-    const handleChange = (selected: string) => {
-        setValue(selected);
-        args.onChange?.(selected);
-    };
-
-    return <Dropdown {...args} value={value} onChange={handleChange} />;
-};
 
 const meta: Meta<typeof Dropdown> = {
     title: 'Components/Dropdown',
@@ -40,7 +24,17 @@ const meta: Meta<typeof Dropdown> = {
             description: 'Show error state',
         },
     },
-    render: (args) => <DropdownWrapper {...args} />,
+    render: function Render(args) {
+        const [, updateArgs] = useArgs();
+        const onChange = (newValue: string) => {
+            // Check if uncontrolled vs controlled explicitly for story panel reactivity
+            if (args.value !== undefined) {
+               updateArgs({ value: newValue });
+            }
+            args.onChange?.(newValue);
+        };
+        return <Dropdown {...args} onChange={onChange} />;
+    },
 };
 
 export default meta;

@@ -2,16 +2,16 @@ import React from 'react';
 import './HeaderDesktop.css';
 import type { HeaderDesktopProps, HeaderNavItem } from './types';
 
-export const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
+export const HeaderDesktop = React.forwardRef<HTMLElement, HeaderDesktopProps>(({
   className = '',
   logo,
   navItems = [],
   actions,
   primaryAction,
   style,
-}) => {
+}, ref) => {
   return (
-    <header className={`cashy-header ${className}`} style={style}>
+    <header ref={ref} className={`cashy-header ${className}`} style={style}>
       <div className="cashy-header-left">
         {logo && (
           <div className="cashy-header-logo">
@@ -54,4 +54,6 @@ export const HeaderDesktop: React.FC<HeaderDesktopProps> = ({
       </div>
     </header>
   );
-};
+});
+
+HeaderDesktop.displayName = 'HeaderDesktop';

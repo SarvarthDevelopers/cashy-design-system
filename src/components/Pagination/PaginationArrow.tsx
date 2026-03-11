@@ -1,7 +1,7 @@
 import React from 'react';
 import './PaginationArrow.css';
 
-export interface PaginationArrowProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface PaginationArrowProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
     /**
      * Direction of the arrow
      */

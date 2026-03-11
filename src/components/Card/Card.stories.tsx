@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { DealCardLarge } from './DealCardLarge';
 
 const meta = {
-  title: 'Components/Card/DealCardLarge',
+  title: 'Card/DealCardLarge',
   component: DealCardLarge,
   parameters: {
     layout: 'centered',

@@ -1,3 +1,4 @@
+import React from 'react';
 import "./Card.css";
 import { ShopLabel } from "./ShopLabel";
 import { CategoriesDealCard } from "./CategoriesDealCard";
@@ -26,7 +27,7 @@ export type DealCardLargeProps = {
   onClick?: () => void;
 };
 
-export const DealCardLarge = ({
+export const DealCardLarge = React.forwardRef<HTMLDivElement, DealCardLargeProps>(({
   className = "",
   amount = "€6,540",
   bookingNo = "123456",
@@ -41,7 +42,7 @@ export const DealCardLarge = ({
   items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"],
   categories = ["General Electronics", "Car", "Jewelry", "Home"],
   onClick,
-}: DealCardLargeProps) => {
+}, ref) => {
   const stateClass = state !== "Default" ? `deal-card--${state.toLowerCase()}` : "";
 
   let displayDate = dueDate;
@@ -51,7 +52,7 @@ export const DealCardLarge = ({
   }
 
   return (
-    <div className={`deal-card ${stateClass} ${className}`} onClick={onClick} tabIndex={0}>
+    <div ref={ref} className={`deal-card ${stateClass} ${className}`} onClick={onClick} tabIndex={0}>
       {/* Header Row */}
       <div className="deal-card-row deal-card-row--header">
         <div className="deal-card-left">
@@ -119,4 +120,6 @@ export const DealCardLarge = ({
       </div>
     </div>
   );
-};
+});
+
+DealCardLarge.displayName = 'DealCardLarge';
