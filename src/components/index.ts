@@ -5,3 +5,5 @@ export * from './Radio/RadioGroup';
 export * from './Radio/RadioContext';
 export * from './Checkbox/Checkbox';
 export * from './Header';
+export * from './Dropdown/Dropdown';
+export * from './ColumnHeader/ColumnHeader';
