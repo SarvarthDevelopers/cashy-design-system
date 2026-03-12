@@ -86,9 +86,15 @@ interface InteractiveColumnProps {
     column: ColumnData;
     highlightedTaskId: string | null;
     onAddTask: (columnId: string, task: Omit<TaskItem, 'id'>) => void;
+    /** Forwarded to the root div so KanBanBoard can read child.props.focused */
+    focused?: boolean;
 }
 
-const InteractiveColumn: React.FC<InteractiveColumnProps> = ({ column, highlightedTaskId, onAddTask }) => {
+// `focused` is intentionally not used in the component body.
+// KanBanBoard.tsx reads it via child.props.focused at the React element level
+// to apply the .cashy-kanban-column--focused highlight ring.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const InteractiveColumn: React.FC<InteractiveColumnProps> = ({ column, highlightedTaskId, onAddTask, focused: _focused }) => {
     const [isCreating, setIsCreating] = useState(false);
 
     const handleAddClick = useCallback(() => {
@@ -467,6 +473,7 @@ This story demonstrates the **full task creation flow** within the KanBan board:
                         <InteractiveColumn
                             key={col.id}
                             column={col}
+                            focused={col.focused}
                             highlightedTaskId={highlightedTaskId}
                             onAddTask={handleAddTask}
                         />
