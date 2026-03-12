@@ -227,11 +227,11 @@
 
 .task-create-card__btn--cancel {
   background-color: transparent;
-  color: var(--text-error);
+  color: var(--text-subtle);
 }
 
 .task-create-card__btn--cancel:hover {
-  color: var(--text-error-on-subtle);
+  color: var(--text-primary);
   background-color: transparent;
   text-decoration: underline;
 }
@@ -368,19 +368,23 @@
 }
 
 /* Active/selected pill state */
+
+/* Today — subtle red tint, not alarming */
 .task-create-card__pill--active-high {
-  background-color: var(--utility-red-red-100);
-  color: var(--utility-red-red-600);
+  background-color: var(--utility-red-red-50);
+  color: var(--utility-red-red-400);
 }
 
+/* Tomorrow — blue to match medium/no-priority card colour */
 .task-create-card__pill--active-medium {
-  background-color: var(--utility-gray-gray-200);
-  color: var(--utility-gray-gray-900);
+  background-color: var(--utility-blue-blue-50);
+  color: var(--utility-blue-blue-600);
 }
 
+/* Calendar (low priority) — stays blue-100, slightly richer than today pill */
 .task-create-card__pill--active-low {
   background-color: var(--utility-blue-blue-100);
-  color: var(--utility-blue-blue-600);
+  color: var(--utility-blue-blue-700);
 }
 
 /* Calendar icon pill */
