@@ -204,7 +204,6 @@ export const Dropdown = forwardRef<HTMLButtonElement, DropdownProps>(
                         tabIndex={-1}
                         onKeyDown={handleListKeyDown}
                         // Keep keyboard focus on the ul so arrow-key events fire here
-                        // eslint-disable-next-line jsx-a11y/no-autofocus
                         autoFocus
                     >
                         {options.map((option, index) => {
