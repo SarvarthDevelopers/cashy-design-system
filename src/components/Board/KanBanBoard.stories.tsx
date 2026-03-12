@@ -3,9 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import { KanBanBoard } from './KanBanBoard';
 import { ColumnHeader } from '../ColumnHeader/ColumnHeader';
-import { TaskCardLarge } from '../TaskCard/TaskCardLarge';
-import { TaskCreateCardLarge } from '../TaskCard/TaskCreateCardLarge';
-import type { TaskPriority } from '../TaskCard/TaskCardLarge';
+import { TaskCardLarge, TaskCreateCardLarge } from '../TaskCard';
+import type { TaskPriority } from '../TaskCard';
 
 /* ========================================
    Shared Types
@@ -25,7 +24,6 @@ interface ColumnData {
     id: string;
     title: string;
     variant: 'admin' | 'staff';
-    focused: boolean;
     tasks: TaskItem[];
 }
 
@@ -217,7 +215,6 @@ interface DummyColumnProps {
     title: string;
     count: number;
     variant?: 'admin' | 'staff';
-    focused?: boolean;
 }
 
 const DummyColumn: React.FC<DummyColumnProps> = ({ title, count, variant = 'admin' }) => (
@@ -258,11 +255,10 @@ export const Default: Story = {
         const initialColumns = React.useMemo(
             () =>
                 Array.from({ length: args.colCount ?? 5 }).map((_, i) => ({
-                    id: `col-${i}-${Date.now()}`,
+                    id: `col-${i}`,
                     title: i === 0 ? (args.firstColumnTitle ?? 'Column 1') : `Column ${i + 1}`,
                     count: i === 0 ? (args.firstColumnCount ?? 12) : Math.floor(Math.random() * 20),
                     variant: (i % 2 === 0 ? 'admin' : 'staff') as 'admin' | 'staff',
-                    focused: false,
                 })),
             [args.colCount, args.firstColumnCount, args.firstColumnTitle],
         );
@@ -284,11 +280,10 @@ export const Default: Story = {
             (index: number) => {
                 if (args.onAddColumn) args.onAddColumn(index);
                 const newColumn = {
-                    id: `col-new-${Date.now()}-${Math.random()}`,
+                    id: `col-new-${Date.now()}`,
                     title: 'New Column',
                     count: 0,
                     variant: 'staff' as const,
-                    focused: true,
                 };
                 setColumns((prev) => {
                     const next = [...prev];
@@ -300,7 +295,7 @@ export const Default: Story = {
         );
 
         return (
-            <div onClick={() => setColumns((prev) => prev.map((c) => ({ ...c, focused: false })))}>
+            <div>
                 <KanBanBoard {...args} onAddColumn={handleAddColumn}>
                     {columns.map((col) => (
                         <DummyColumn
@@ -308,7 +303,6 @@ export const Default: Story = {
                             title={col.title}
                             count={col.count}
                             variant={col.variant}
-                            focused={col.focused}
                         />
                     ))}
                 </KanBanBoard>
@@ -382,28 +376,24 @@ This story demonstrates the **full task creation flow** within the KanBan board:
                 id: 'col-inbox',
                 title: 'Inbox',
                 variant: 'admin',
-                focused: false,
                 tasks: [sampleTasks[0]],
             },
             {
                 id: 'col-in-progress',
                 title: 'In Progress',
                 variant: 'admin',
-                focused: false,
                 tasks: [sampleTasks[1], sampleTasks[2]],
             },
             {
                 id: 'col-review',
                 title: 'Review',
                 variant: 'staff',
-                focused: false,
                 tasks: [],
             },
             {
                 id: 'col-done',
                 title: 'Done',
                 variant: 'staff',
-                focused: false,
                 tasks: [],
             },
         ]);
@@ -417,25 +407,25 @@ This story demonstrates the **full task creation flow** within the KanBan board:
             (columnId: string, task: Omit<TaskItem, 'id'>) => {
                 const newTaskId = `task-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
                 const newTask: TaskItem = { ...task, id: newTaskId };
-                const columnName = columns.find((c) => c.id === columnId)?.title ?? 'column';
 
-                // Insert in priority order (high → medium → low)
-                setColumns((prev) =>
-                    prev.map((col) =>
+                setColumns((prev) => {
+                    // Read column name from the latest state inside the updater
+                    const columnName = prev.find((c) => c.id === columnId)?.title ?? 'column';
+                    // Show toast outside setState (state updater must be pure)
+                    setTimeout(() => {
+                        setToast({ message: `Task added in "${columnName}"`, key: Date.now() });
+                        setTimeout(() => setToast(null), 3200);
+                    }, 0);
+                    return prev.map((col) =>
                         col.id === columnId
                             ? { ...col, tasks: insertTaskSorted(col.tasks, newTask) }
                             : col,
-                    ),
-                );
+                    );
+                });
 
-                // Show board-level toast
-                setToast({ message: `Task added in "${columnName}"`, key: Date.now() });
-                // Highlight new card with brand border
                 setHighlightedTaskId(newTaskId);
-                // Auto-clear toast after animation (3s) + buffer
-                setTimeout(() => setToast(null), 3200);
             },
-            [columns],
+            [], // stable — reads columns via functional setState
         );
 
         const handleAddColumn = useCallback((index: number) => {
@@ -443,7 +433,6 @@ This story demonstrates the **full task creation flow** within the KanBan board:
                 id: `col-${Date.now()}`,
                 title: 'New Column',
                 variant: 'staff',
-                focused: true,
                 tasks: [],
             };
             setColumns((prev) => {
@@ -455,7 +444,6 @@ This story demonstrates the **full task creation flow** within the KanBan board:
 
         // Any click on board clears focused columns AND the highlight
         const handleBoardClick = useCallback(() => {
-            setColumns((prev) => prev.map((c) => ({ ...c, focused: false })));
             if (highlightedTaskId) setHighlightedTaskId(null);
         }, [highlightedTaskId]);
 
