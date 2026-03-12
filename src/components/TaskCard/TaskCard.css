@@ -20,6 +20,7 @@
   position: relative;
   box-sizing: border-box;
   transition: border-color 0.2s ease-in-out, box-shadow 0.3s ease;
+  flex-shrink: 0;
 }
 
 /* Highlighted state for newly created task */
@@ -182,6 +183,7 @@
   padding: var(--space-200);
   position: relative;
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 /* --- Header --- */

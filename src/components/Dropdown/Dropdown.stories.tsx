@@ -12,6 +12,13 @@ const meta: Meta<typeof Dropdown> = {
             type: 'figma',
         },
     },
+    decorators: [
+        (Story) => (
+            <div style={{ maxWidth: '320px' }}>
+                <Story />
+            </div>
+        ),
+    ],
     tags: [],
     argTypes: {
         onChange: { action: 'changed' },
