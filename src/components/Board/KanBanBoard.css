@@ -88,6 +88,7 @@
 
 .cashy-kanban-column-header {
   /* Header stays permanently at the top of the column natively */
+  position: relative;
   padding-top: var(--space-300, 12px);
   padding-bottom: var(--space-100, 4px);
   padding-left: var(--space-200, 8px);
