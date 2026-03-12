@@ -24,6 +24,8 @@ interface ColumnData {
     id: string;
     title: string;
     variant: 'admin' | 'staff';
+    /** When true, the column gets the --focused ring (just added via the + button). */
+    focused: boolean;
     tasks: TaskItem[];
 }
 
@@ -215,6 +217,8 @@ interface DummyColumnProps {
     title: string;
     count: number;
     variant?: 'admin' | 'staff';
+    /** Passed through to KanBanBoard so it can apply the --focused ring. */
+    focused?: boolean;
 }
 
 const DummyColumn: React.FC<DummyColumnProps> = ({ title, count, variant = 'admin' }) => (
@@ -259,6 +263,7 @@ export const Default: Story = {
                     title: i === 0 ? (args.firstColumnTitle ?? 'Column 1') : `Column ${i + 1}`,
                     count: i === 0 ? (args.firstColumnCount ?? 12) : Math.floor(Math.random() * 20),
                     variant: (i % 2 === 0 ? 'admin' : 'staff') as 'admin' | 'staff',
+                    focused: false,
                 })),
             [args.colCount, args.firstColumnCount, args.firstColumnTitle],
         );
@@ -284,6 +289,7 @@ export const Default: Story = {
                     title: 'New Column',
                     count: 0,
                     variant: 'staff' as const,
+                    focused: true,
                 };
                 setColumns((prev) => {
                     const next = [...prev];
@@ -295,7 +301,7 @@ export const Default: Story = {
         );
 
         return (
-            <div>
+            <div onClick={() => setColumns((prev) => prev.map((c) => ({ ...c, focused: false })))}>
                 <KanBanBoard {...args} onAddColumn={handleAddColumn}>
                     {columns.map((col) => (
                         <DummyColumn
@@ -303,6 +309,7 @@ export const Default: Story = {
                             title={col.title}
                             count={col.count}
                             variant={col.variant}
+                            focused={col.focused}
                         />
                     ))}
                 </KanBanBoard>
@@ -376,24 +383,28 @@ This story demonstrates the **full task creation flow** within the KanBan board:
                 id: 'col-inbox',
                 title: 'Inbox',
                 variant: 'admin',
+                focused: false,
                 tasks: [sampleTasks[0]],
             },
             {
                 id: 'col-in-progress',
                 title: 'In Progress',
                 variant: 'admin',
+                focused: false,
                 tasks: [sampleTasks[1], sampleTasks[2]],
             },
             {
                 id: 'col-review',
                 title: 'Review',
                 variant: 'staff',
+                focused: false,
                 tasks: [],
             },
             {
                 id: 'col-done',
                 title: 'Done',
                 variant: 'staff',
+                focused: false,
                 tasks: [],
             },
         ]);
@@ -433,6 +444,7 @@ This story demonstrates the **full task creation flow** within the KanBan board:
                 id: `col-${Date.now()}`,
                 title: 'New Column',
                 variant: 'staff',
+                focused: true,
                 tasks: [],
             };
             setColumns((prev) => {
@@ -442,8 +454,9 @@ This story demonstrates the **full task creation flow** within the KanBan board:
             });
         }, []);
 
-        // Any click on board clears focused columns AND the highlight
+        // Any click on board clears focused columns AND the task highlight
         const handleBoardClick = useCallback(() => {
+            setColumns((prev) => prev.map((c) => ({ ...c, focused: false })));
             if (highlightedTaskId) setHighlightedTaskId(null);
         }, [highlightedTaskId]);
 
