@@ -58,9 +58,9 @@ export const Focused: Story = {
         options: defaultOptions,
     },
     play: async ({ canvasElement }) => {
-         const canvas = within(canvasElement);
-         const trigger = canvas.getByRole('combobox');
-         await userEvent.click(trigger);
+        const canvas = within(canvasElement);
+        const trigger = canvas.getByRole('button', { name: /company/i });
+        await userEvent.click(trigger);
     }
 };
 
@@ -107,18 +107,18 @@ export const InteractiveSelection: Story = {
     },
     play: async ({ args, canvasElement }) => {
         const canvas = within(canvasElement);
-        const trigger = canvas.getByRole('combobox');
-        
+        const trigger = canvas.getByRole('button', { name: /company/i });
+
         // Open dropdown
         await userEvent.click(trigger);
-        
+
         // Find options in the listbox
         const listbox = canvas.getByRole('listbox');
         const optionsList = within(listbox).getAllByRole('option');
-        
+
         // Click the first option
         await userEvent.click(optionsList[0]);
-        
+
         // Verify selection
         await waitFor(() => expect(args.onChange).toHaveBeenCalledWith('at'));
     }
