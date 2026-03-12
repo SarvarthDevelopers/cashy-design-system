@@ -115,6 +115,9 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    /* Reset ul defaults */
+    list-style: none;
+    margin: 0;
 }
 
 [data-theme="dark"] .dropdownList {
@@ -138,19 +141,28 @@
     transition: background-color 0.2s ease;
     box-sizing: border-box;
     width: 100%;
-    border: none;
+    list-style: none;
     text-align: left;
     flex-shrink: 0;
+    /* Reset list-item default margin/padding */
+    margin: 0;
+    outline: none;
 }
 
-.item:hover, .item:focus {
+.item:hover {
     background-color: var(--background-secondary-hover);
-    outline: none;
+}
+
+/* Keyboard-focus highlight (driven by focusedIndex in JS) */
+.item.focused {
+    background-color: var(--background-secondary-hover);
 }
 
 .item.selected {
     background-color: var(--background-secondary-hover);
 }
+
+
 
 /* Helper & Error Texts */
 .helperText {
