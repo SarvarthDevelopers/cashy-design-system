@@ -16,7 +16,7 @@ const meta: Meta<typeof Tabs> = {
     argTypes: {
         variant: {
             control: 'select',
-            options: ['underline', 'pill', 'ghost', 'segment'],
+            options: ['underline', 'pill', 'ghost', 'segment', 'stepper'],
             description: 'Visual variant of the tabs',
         },
         fullWidth: {
@@ -28,78 +28,142 @@ const meta: Meta<typeof Tabs> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof Tabs>;
 
-export const Underline: Story = {
+export interface TabItem {
+    value: string;
+    label: string;
+    subtitle?: string;
+    disabled?: boolean;
+}
+
+interface DynamicStoryProps extends React.ComponentProps<typeof Tabs> {
+    items?: TabItem[];
+    showIcon?: boolean;
+}
+
+const renderDynamicTabs = (args: DynamicStoryProps) => {
+    const icon1 = args.showIcon ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    ) : undefined;
+    const icon2 = args.showIcon ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    ) : undefined;
+
+    return (
+        <Tabs {...args}>
+            {args.items?.map((item, idx) => (
+                <Tab 
+                    key={item.value} 
+                    value={item.value} 
+                    subtitle={item.subtitle}
+                    disabled={item.disabled}
+                    icon={idx === 0 ? icon1 : idx === 1 ? icon2 : undefined}
+                >
+                    {item.label}
+                </Tab>
+            ))}
+        </Tabs>
+    );
+};
+
+export const Underline: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'underline',
-        children: (
-            <>
-                <Tab value="tab1">Account</Tab>
-                <Tab value="tab2">Preferences</Tab>
-                <Tab value="tab3">Security</Tab>
-            </>
-        ),
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'Account' },
+            { value: 'tab2', label: 'Preferences' },
+            { value: 'tab3', label: 'Security' }
+        ]
     },
+    render: renderDynamicTabs
 };
 
-export const Pill: Story = {
+export const UnderlineWithSubtitle: StoryObj<DynamicStoryProps> = {
+    args: {
+        defaultValue: 'item1',
+        variant: 'underline-thick',
+        showIcon: false,
+        items: [
+            { value: 'item1', label: 'ITEM 1', subtitle: 'Peugeot 208' },
+            { value: 'item2', label: 'ITEM 2', subtitle: 'iPhone 16' },
+            { value: 'item3', label: 'ITEM 3', subtitle: 'Tissot PRX' }
+        ]
+    },
+    render: renderDynamicTabs
+};
+
+export const Pill: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'pill',
-        children: (
-            <>
-                <Tab value="tab1">All</Tab>
-                <Tab value="tab2">Active</Tab>
-                <Tab value="tab3">Completed</Tab>
-            </>
-        ),
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'All' },
+            { value: 'tab2', label: 'Active' },
+            { value: 'tab3', label: 'Completed' }
+        ]
     },
+    render: renderDynamicTabs
 };
 
-export const Ghost: Story = {
+export const Ghost: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'ghost',
-        children: (
-            <>
-                <Tab value="tab1">Overview</Tab>
-                <Tab value="tab2">Analytics</Tab>
-                <Tab value="tab3">Reports</Tab>
-            </>
-        ),
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'Overview' },
+            { value: 'tab2', label: 'Analytics' },
+            { value: 'tab3', label: 'Reports' }
+        ]
     },
+    render: renderDynamicTabs
 };
 
-export const Segment: Story = {
+export const Segment: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'segment',
-        children: (
-            <>
-                <Tab value="tab1">Daily</Tab>
-                <Tab value="tab2">Weekly</Tab>
-                <Tab value="tab3">Monthly</Tab>
-            </>
-        ),
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'Daily' },
+            { value: 'tab2', label: 'Weekly' },
+            { value: 'tab3', label: 'Monthly' }
+        ]
     },
+    render: renderDynamicTabs
 };
 
-export const FullWidth: Story = {
+export const Stepper: StoryObj<DynamicStoryProps> = {
+    args: {
+        defaultValue: 'step3',
+        variant: 'stepper',
+        showIcon: false,
+        items: [
+            { value: 'step1', label: '1. Research' },
+            { value: 'step2', label: '2. Price' },
+            { value: 'step3', label: '3. Verification' },
+            { value: 'step4', label: '4. Documents' },
+            { value: 'step5', label: '5. Approval' },
+            { value: 'step6', label: '6. Payout' },
+            { value: 'step7', label: '7. Storage' }
+        ]
+    },
+    render: renderDynamicTabs
+};
+
+export const FullWidth: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'underline',
         fullWidth: true,
-        children: (
-            <>
-                <Tab value="tab1">Login</Tab>
-                <Tab value="tab2">Register</Tab>
-            </>
-        ),
-    },
-    parameters: {
-        layout: 'padded', // To improved visibility of full width
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'Login' },
+            { value: 'tab2', label: 'Register' }
+        ]
     },
     decorators: [
         (Story) => (
@@ -107,19 +171,20 @@ export const FullWidth: Story = {
                 <Story />
             </div>
         ),
-    ]
+    ],
+    render: renderDynamicTabs
 };
 
-export const DisabledTab: Story = {
+export const DisabledTab: StoryObj<DynamicStoryProps> = {
     args: {
         defaultValue: 'tab1',
         variant: 'underline',
-        children: (
-            <>
-                <Tab value="tab1">Available</Tab>
-                <Tab value="tab2" disabled>Unavailable</Tab>
-                <Tab value="tab3">Hidden</Tab>
-            </>
-        ),
+        showIcon: false,
+        items: [
+            { value: 'tab1', label: 'Available' },
+            { value: 'tab2', label: 'Unavailable', disabled: true },
+            { value: 'tab3', label: 'Hidden' }
+        ]
     },
+    render: renderDynamicTabs
 };

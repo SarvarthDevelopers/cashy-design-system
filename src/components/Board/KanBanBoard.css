@@ -60,8 +60,12 @@
   background-color: var(--background-primary, #FFFFFF);
   border-radius: var(--radius-200, 8px);
   
-  /* Essential to clip the header corners smoothly to the board radius */
-  overflow: hidden; 
+  /* overflow:hidden is needed to:
+     1. Clip content to the column's border-radius (visual rounding)
+     2. Force the flex column-body child to be bounded (not overflow the column)
+     The column-body uses overflow-y:auto to scroll independently within this bound.
+     height:100% (below) gives this overflow context a definite size to scroll within. */
+  overflow: hidden;
 
   /* Applying explicit border to column for the hover state */
   border: 1px solid transparent;
@@ -72,8 +76,8 @@
   display: flex;
   flex-direction: column;
   
-  /* Flex stretch inherently creates full-height availability against .cashy-kanban-board bounds */
-  height: auto;
+  /* Fill the board height so the body has a bounded height to scroll within */
+  height: 100%;
 }
 
 .cashy-kanban-column:hover {

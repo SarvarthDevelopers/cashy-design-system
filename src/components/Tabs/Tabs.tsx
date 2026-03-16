@@ -18,7 +18,7 @@ export interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {
     /**
      * Visual variant of the tabs
      */
-    variant?: 'underline' | 'pill' | 'ghost' | 'segment';
+    variant?: 'underline' | 'pill' | 'ghost' | 'segment' | 'underline-thick' | 'stepper';
     /**
      * Whether tabs should take up full width
      */
@@ -57,14 +57,36 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
     // but standard practice is purely controlled or default. 
     // If no default and no value, nothing is selected.
 
+    const tabValues = React.Children.toArray(children)
+        .filter(React.isValidElement)
+        .map(child => (child as React.ReactElement).props.value as string);
+
+    const renderChildren = () => {
+        if (variant !== 'stepper') return children;
+
+        const childrenArray = React.Children.toArray(children).filter(React.isValidElement);
+        return childrenArray.map((child, index) => (
+            <React.Fragment key={(child as React.ReactElement).props.value || index}>
+                {child}
+                {index < childrenArray.length - 1 && (
+                    <div className="tab__stepper-separator" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.25 10.5L8.75 7L5.25 3.5" stroke="var(--text-placeholder, #8A95A6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </div>
+                )}
+            </React.Fragment>
+        ));
+    };
+
     return (
-        <TabsContext.Provider value={{ value: value || '', onValueChange: handleValueChange, variant }}>
+        <TabsContext.Provider value={{ value: value || '', onValueChange: handleValueChange, variant, tabValues }}>
             <div
                 className={`tabs tabs--${variant} ${fullWidth ? 'tabs--full-width' : ''} ${className}`}
                 ref={ref}
                 {...props}
             >
-                {children}
+                {renderChildren()}
             </div>
         </TabsContext.Provider>
     );

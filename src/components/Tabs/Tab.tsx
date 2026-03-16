@@ -10,11 +10,16 @@ export interface TabProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
      * Optional icon to display
      */
     icon?: React.ReactNode;
+    /**
+     * Optional subtitle to display below the main label
+     */
+    subtitle?: string;
 }
 
 export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(({
     value,
     icon,
+    subtitle,
     children,
     className = '',
     disabled,
@@ -26,8 +31,27 @@ export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(({
         throw new Error('Tab must be used within a Tabs component');
     }
 
-    const { value: selectedValue, onValueChange } = context;
+    const { value: selectedValue, onValueChange, variant, tabValues } = context;
     const isSelected = selectedValue === value;
+    
+    // Logic for stepper variant
+    const currentIndex = tabValues?.indexOf(value) ?? -1;
+    const activeIndex = tabValues?.indexOf(selectedValue) ?? -1;
+    const isCompleted = activeIndex > -1 && currentIndex > -1 && currentIndex < activeIndex;
+
+    const getStepperClass = () => {
+        if (variant !== 'stepper') return '';
+        if (isSelected) return 'tab--stepper-active';
+        if (isCompleted) return 'tab--stepper-completed';
+        return 'tab--stepper-pending';
+    };
+
+    const handleTabClick = () => {
+        if (disabled) return;
+        // Optional: you can prevent completing/navigating past pending steps here if desired
+        // but typically tabs allow jumping if not disabled. We'll leave it simple.
+        onValueChange(value);
+    };
 
     return (
         <button
@@ -35,14 +59,16 @@ export const Tab = React.forwardRef<HTMLButtonElement, TabProps>(({
             role="tab"
             aria-selected={isSelected}
             disabled={disabled}
-            className={`tab ${isSelected ? 'tab--selected' : ''} ${className}`}
-            onClick={() => !disabled && onValueChange(value)}
+            className={`tab ${isSelected ? 'tab--selected' : ''} ${getStepperClass()} ${className}`}
+            onClick={handleTabClick}
             ref={ref}
             {...props}
         >
             {icon && <span className="tab__icon">{icon}</span>}
-            <span className="tab__label">{children}</span>
-
+            <span className="tab__content">
+                <span className="tab__label">{children}</span>
+                {subtitle && <span className="tab__subtitle">{subtitle}</span>}
+            </span>
         </button>
     );
 });
