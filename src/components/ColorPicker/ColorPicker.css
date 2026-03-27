@@ -76,6 +76,8 @@
     color: var(--text-primary);
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .color-picker__hex-btn:hover {
@@ -105,6 +107,7 @@
     width: 28px;
     height: 28px;
     border-radius: var(--radius-100);   /* 4px */
+    border: 1px solid var(--border-subtle); /* subtle fallback border for mobile rendering */
 }
 
 /* Text input wrapper with bottom border */
@@ -126,15 +129,24 @@
     font-family: var(--body-font-family);
     font-size: var(--scale-02);         /* 12px */
     font-weight: var(--weight-regular);
-    line-height: 1.4;
+    line-height: normal;
     color: var(--text-primary);
     padding: 0;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    
+    /* Mobile/iOS safeguards */
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    opacity: 1;
+    -webkit-text-fill-color: var(--text-primary);
 }
 
 .color-picker__hex-input::placeholder {
     color: var(--text-placeholder);
+    opacity: 1; /* Reset iOS default placeholder opacity */
+    -webkit-text-fill-color: var(--text-placeholder);
 }
 
 /* ─── HEX mode action buttons (confirm / cancel) ────────────────── */
@@ -160,6 +172,8 @@
     color: var(--text-subtle);
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .color-picker__icon-btn:hover:not(:disabled) {
