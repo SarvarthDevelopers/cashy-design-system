@@ -30,6 +30,8 @@ export interface ColorPickerProps {
     onChange?: (color: string) => void;
     /** Additional class names for the root element */
     className?: string;
+    /** If true, the picker opens in Hex mode instead of Swatch mode */
+    defaultHexMode?: boolean;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -77,8 +79,9 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(({
     label = 'Column Colour',
     onChange,
     className = '',
+    defaultHexMode = false,
 }, ref) => {
-    const [isHexMode, setIsHexMode] = useState(false);
+    const [isHexMode, setIsHexMode] = useState(defaultHexMode);
     const [hexInput, setHexInput] = useState('');
 
     /**

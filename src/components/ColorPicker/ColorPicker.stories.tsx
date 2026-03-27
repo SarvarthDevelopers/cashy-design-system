@@ -80,6 +80,7 @@ export const HexMode: Story = {
     args: {
         label: 'Column Colour',
         value: '#EF4544',
+        defaultHexMode: true,
         onChange: fn(),
     },
     render: (args) => <InteractiveColorPicker {...args} />,
