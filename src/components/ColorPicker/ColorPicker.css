@@ -8,6 +8,13 @@
     gap: var(--space-150); /* 6px */
     align-items: flex-start;
     width: 228px;
+    box-sizing: border-box;
+}
+
+.color-picker *,
+.color-picker *::before,
+.color-picker *::after {
+    box-sizing: border-box;
 }
 
 /* ─── Label ─────────────────────────────────────────────────────── */
@@ -123,6 +130,7 @@
 
 .color-picker__hex-input {
     width: 100%;
+    min-width: 0;
     border: none;
     outline: none;
     background: transparent;
