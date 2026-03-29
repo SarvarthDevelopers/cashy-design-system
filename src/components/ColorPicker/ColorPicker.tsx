@@ -273,6 +273,18 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(({
                             );
                         })}
 
+                        {/* Clear / No Color button */}
+                        <button
+                            type="button"
+                            className="color-picker__hex-btn"
+                            onClick={() => handleSwatchClick('')}
+                            aria-label="Clear colour"
+                        >
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style={{ color: 'var(--text-error)' }}>
+                                <path d="M8.5 1.5L1.5 8.5M1.5 1.5l7 7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+
                         {/* Hex entry trigger button */}
                         <button
                             type="button"
