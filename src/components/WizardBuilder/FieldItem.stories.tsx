@@ -121,9 +121,33 @@ export const CanvasOverview: Story = {
       createField('image', 'Vehicle Exterior', { enableCamera: true, expanded: true }),
       createField('dropdown', 'Roadworthiness', { options: ['Roadworthy', 'Needs Repairs'], expanded: false }),
     ]);
+    const [draggedId, setDraggedId] = React.useState<string | null>(null);
 
     const handleUpdate = (id: string, updates: Partial<FieldItemData>) => {
       setFields(prev => prev.map(f => f.id === id ? { ...f, ...updates } : f));
+    };
+
+    const handleDragStart = (id: string) => {
+      setDraggedId(id);
+    };
+
+    const handleDragOver = (e: React.DragEvent, targetId: string) => {
+      e.preventDefault();
+      if (!draggedId || draggedId === targetId) return;
+
+      const draggedIndex = fields.findIndex(f => f.id === draggedId);
+      const targetIndex = fields.findIndex(f => f.id === targetId);
+
+      if (draggedIndex !== -1 && targetIndex !== -1) {
+        const newFields = [...fields];
+        const [removed] = newFields.splice(draggedIndex, 1);
+        newFields.splice(targetIndex, 0, removed);
+        setFields(newFields);
+      }
+    };
+
+    const handleDragEnd = () => {
+      setDraggedId(null);
     };
 
     return (
@@ -135,6 +159,11 @@ export const CanvasOverview: Story = {
             isSelected={f.expanded}
             onUpdate={handleUpdate}
             onRemove={(id) => setFields(prev => prev.filter(item => item.id !== id))}
+            draggable
+            isDragging={draggedId === f.id}
+            onDragStart={() => handleDragStart(f.id)}
+            onDragOver={(e) => handleDragOver(e, f.id)}
+            onDragEnd={handleDragEnd}
           />
         ))}
       </div>

@@ -24,6 +24,12 @@
   box-shadow: 0 0 0 1px var(--border-focused), 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+.fi-card--dragging {
+  opacity: 0.5;
+  border-style: dashed;
+  cursor: grabbing;
+}
+
 [data-theme="dark"] .fi-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -68,10 +74,15 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: var(--background-secondary);
+  background: var(--background-tertiary);
   border-radius: var(--radius-200);
   color: var(--text-primary);
   flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.fi-card:hover .fi-type-badge {
+  background: var(--background-tertiary-hover);
 }
 
 .fi-type-badge svg {
@@ -92,8 +103,8 @@
 }
 
 .fi-info__title {
-  font-size: var(--body-size-large);
-  font-weight: var(--weight-medium);
+  font-size: var(--scale-04);
+  font-weight: var(--body-font-weight-strong);
   color: var(--text-primary);
   line-height: 1.4;
 }
@@ -208,8 +219,8 @@
 }
 
 .fi-label {
-  font-size: var(--body-size-small);
-  font-weight: var(--weight-medium);
+  font-size: var(--body-size-medium);
+  font-weight: var(--body-font-weight-medium);
   color: var(--text-subtle);
 }
 
@@ -218,7 +229,7 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-200);
   padding: var(--space-100) var(--space-300);
-  font-size: var(--body-size-medium);
+  font-size: var(--body-size-large);
   color: var(--text-primary);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -333,6 +344,7 @@
   border: none;
   border-radius: var(--radius-200);
   padding: 0 var(--space-600);
+  font-size: var(--body-size-medium);
   font-weight: var(--weight-medium);
   cursor: pointer;
   transition: background 0.2s ease;

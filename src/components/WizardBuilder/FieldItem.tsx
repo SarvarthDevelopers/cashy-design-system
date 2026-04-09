@@ -47,6 +47,12 @@ export interface FieldItemProps {
   onRemove?: (id: string) => void;
   onUpdate?: (id: string, updates: Partial<FieldItemData>) => void;
   className?: string;
+  draggable?: boolean;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragOver?: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop?: (e: React.DragEvent<HTMLDivElement>) => void;
+  isDragging?: boolean;
 }
 
 // ─── SVG Icons ───────────────────────────────────────────────────────────────
@@ -110,6 +116,22 @@ const UrlIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" clipRule="evenodd" d="M6 8C4.93913 8 3.92172 8.42143 3.17157 9.17157C2.42143 9.92172 2 10.9391 2 12C2 13.0609 2.42143 14.0783 3.17157 14.8284C3.54301 15.1999 3.98396 15.4945 4.46927 15.6955C4.95457 15.8965 5.47471 16 6 16H9C9.55229 16 10 16.4477 10 17C10 17.5523 9.55229 18 9 18H6C5.21207 18 4.43185 17.8448 3.7039 17.5433C2.97595 17.2417 2.31451 16.7998 1.75736 16.2426C0.632141 15.1174 0 13.5913 0 12C0 10.4087 0.632141 8.88258 1.75736 7.75736C2.88258 6.63214 4.4087 6 6 6H9C9.55229 6 10 6.44772 10 7C10 7.55228 9.55229 8 9 8H6ZM14 7C14 6.44772 14.4477 6 15 6H18C18.7879 6 19.5681 6.15519 20.2961 6.45672C21.0241 6.75825 21.6855 7.20021 22.2426 7.75736C22.7998 8.31451 23.2417 8.97595 23.5433 9.7039C23.8448 10.4319 24 11.2121 24 12C24 12.7879 23.8448 13.5681 23.5433 14.2961C23.2417 15.0241 22.7998 15.6855 22.2426 16.2426C21.6855 16.7998 21.0241 17.2417 20.2961 17.5433C19.5681 17.8448 18.7879 18 18 18H15C14.4477 18 14 17.5523 14 17C14 16.4477 14.4477 16 15 16H18C18.5253 16 19.0454 15.8965 19.5307 15.6955C20.016 15.4945 20.457 15.1999 20.8284 14.8284C21.1999 14.457 21.4945 14.016 21.6955 13.5307C21.8965 13.0454 22 12.5253 22 12C22 11.4747 21.8965 10.9546 21.6955 10.4693C21.4945 9.98396 21.1999 9.54301 20.8284 9.17157C20.457 8.80014 20.016 8.5055 19.5307 8.30448C19.0454 8.10346 18.5253 8 18 8H15C14.4477 8 14 7.55228 14 7Z" fill="currentColor"/>
     <path fillRule="evenodd" clipRule="evenodd" d="M7 12C7 11.4477 7.44772 11 8 11H16C16.5523 11 17 11.4477 17 12C17 12.5523 16.5523 13 16 13H8C7.44772 13 7 12.5523 7 12Z" fill="currentColor"/>
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M5 5C4.44772 5 4 5.44772 4 6V20C4 20.5523 4.44772 21 5 21H19C19.5523 21 20 20.5523 20 20V6C20 5.44772 19.5523 5 19 5H5ZM2 6C2 4.34315 3.34315 3 5 3H19C20.6569 3 22 4.34315 22 6V20C22 21.6569 20.6569 23 19 23H5C3.34315 23 2 21.6569 2 20V6Z" fill="currentColor"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M16 1C16.5523 1 17 1.44772 17 2V6C17 6.55228 16.5523 7 16 7C15.4477 7 15 6.55228 15 6V2C15 1.44772 15.4477 1 16 1Z" fill="currentColor"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M8 1C8.55228 1 9 1.44772 9 2V6C9 6.55228 8.55228 7 8 7C7.44772 7 7 6.55228 7 6V2C7 1.44772 7.44772 1 8 1Z" fill="currentColor"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M2 10C2 9.44771 2.44772 9 3 9H21C21.5523 9 22 9.44771 22 10C22 10.5523 21.5523 11 21 11H3C2.44772 11 2 10.5523 2 10Z" fill="currentColor"/>
+  </svg>
+);
+
+const ToggleIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M8 6C4.68629 6 2 8.68629 2 12C2 15.3137 4.68629 18 8 18H16C19.3137 18 22 15.3137 22 12C22 8.68629 19.3137 6 16 6H8ZM0 12C0 7.58172 3.58172 4 8 4H16C20.4183 4 24 7.58172 24 12C24 16.4183 20.4183 20 16 20H8C3.58172 20 0 16.4183 0 12Z" fill="currentColor"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M16 10C14.8954 10 14 10.8954 14 12C14 13.1046 14.8954 14 16 14C17.1046 14 18 13.1046 18 12C18 10.8954 17.1046 10 16 10ZM12 12C12 9.79086 13.7909 8 16 8C18.2091 8 20 9.79086 20 12C20 14.2091 18.2091 16 16 16C13.7909 16 12 14.2091 12 12Z" fill="currentColor"/>
   </svg>
 );
 
@@ -251,7 +273,23 @@ export const FieldItem: React.FC<FieldItemProps> = ({
   onRemove,
   onUpdate,
   className,
+  draggable,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDrop,
+  isDragging,
 }) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    // Only allow dragging from the handle
+    const target = e.target as HTMLElement;
+    if (!target.closest('.fi-drag-handle')) {
+      e.preventDefault();
+      return;
+    }
+    onDragStart?.(e);
+  };
+
   const toggleExpanded = (e: React.MouseEvent) => {
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return;
@@ -321,6 +359,8 @@ export const FieldItem: React.FC<FieldItemProps> = ({
       case 'file': return <FileUploadIcon />;
       case 'image': return <ImageUploadIcon />;
       case 'url': return <UrlIcon />;
+      case 'date': return <CalendarIcon />;
+      case 'toggle': return <ToggleIcon />;
       default:
         return <div className="fi-type-badge__char">{field.fieldType.label[0]}</div>;
     }
@@ -339,10 +379,14 @@ export const FieldItem: React.FC<FieldItemProps> = ({
 
   return (
     <div 
-      className={`fi-card ${field.expanded ? 'fi-card--expanded' : 'fi-card--collapsed'} ${isSelected ? 'fi-card--selected' : ''} ${className || ''}`}
-      onClick={toggleExpanded} 
+      className={`fi-card ${field.expanded ? 'fi-card--expanded' : 'fi-card--collapsed'} ${isSelected ? 'fi-card--selected' : ''} ${isDragging ? 'fi-card--dragging' : ''} ${className || ''}`}
+      draggable={draggable}
+      onDragStart={handleDragStart}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
-      <div className="fi-header">
+      <div className="fi-header" onClick={toggleExpanded}>
         <div className="fi-header__left">
           <div className="fi-drag-handle"><DragHandleIcon /></div>
           <div className="fi-type-badge">{getTypeIcon()}</div>
