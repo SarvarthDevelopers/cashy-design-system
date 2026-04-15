@@ -1,11 +1,151 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { useArgs } from '@storybook/preview-api';
-import { FieldItem, type FieldItemProps, type FieldItemData } from './FieldItem';
+
+import { FieldItem, type FieldItemData, type FieldType } from './FieldItem';
+import { Button } from '../Button/Button';
+import { Input } from '../Input/Input';
+import { TextArea } from '../TextArea/TextArea';
+import { Dropdown as DropdownComponent } from '../Dropdown/Dropdown';
+import { Checkbox as CheckboxComponent } from '../Checkbox/Checkbox';
+import { Radio } from '../Radio/Radio';
+import { RadioGroup } from '../Radio/RadioGroup';
+import { Toggle as ToggleComponent } from '../Toggle/Toggle';
+
+// ─── Deal Wizard (End-User) Field Render ─────────────────────────────────────
+
+const DealWizardField = ({ field }: { field: FieldItemData }) => {
+  const { fieldType, label, helpText, required, placeholder, options, buttonLabel } = field;
+  
+  const renderInput = () => {
+    switch (fieldType.type) {
+      case 'textarea':
+        return (
+          <TextArea 
+            placeholder={placeholder} 
+            helperText={helpText}
+            required={required}
+          />
+        );
+      case 'dropdown':
+        return (
+          <DropdownComponent 
+            options={(options || []).map(opt => ({ label: opt, value: opt }))}
+            placeholder={placeholder || 'Select option'}
+            helperText={helpText}
+            required={required}
+          />
+        );
+      case 'checkbox':
+        return (
+          <div className="dw-options-grid">
+            {!field.allowMultiple ? (
+              <RadioGroup name={field.id}>
+                {options?.map((opt, i) => (
+                  <Radio key={i} label={opt} value={opt} />
+                ))}
+              </RadioGroup>
+            ) : (
+              options?.map((opt, i) => (
+                <CheckboxComponent key={i} label={opt} name={field.id} />
+              ))
+            )}
+          </div>
+        );
+      case 'file':
+      case 'image':
+        return (
+          <div className="dw-upload-zone">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.5 }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+              <div className="fi-info__title" style={{ marginBottom: '4px' }}>{label}</div>
+              <div className="fi-info__subtitle">
+                Max size: {field.maxFileSize || 5}MB
+                {field.acceptedFormats && ` • Allowed: ${field.acceptedFormats}`}
+              </div>
+            </div>
+            <Button variant="secondary" size="small">{buttonLabel || 'Upload File'}</Button>
+          </div>
+        );
+      case 'toggle':
+        return <ToggleComponent label={label} description={helpText} />;
+      case 'date':
+        return (
+          <Input 
+            type="date" 
+            placeholder={placeholder} 
+            helperText={helpText}
+            required={required}
+          />
+        );
+      case 'url':
+        return (
+          <Input 
+            type="url" 
+            placeholder={placeholder || 'https://'} 
+            helperText={helpText}
+            required={required}
+          />
+        );
+      default:
+        return (
+          <Input 
+            type="text" 
+            placeholder={placeholder} 
+            helperText={helpText}
+            required={required}
+          />
+        );
+    }
+  };
+
+  return (
+    <div className="dw-field">
+      {fieldType.type !== 'toggle' && (
+        <label className="dw-label">
+          {label}
+          {required && <span className="dw-required-star">*</span>}
+        </label>
+      )}
+      {renderInput()}
+      {/* helpText is now handled by the components themselves via helperText prop where applicable */}
+    </div>
+  );
+};
+
+// ─── Dual View Wrapper ───────────────────────────────────────────────────────
+
+const DualView = ({ children, field }: { children: React.ReactNode, field: FieldItemData }) => (
+  <div className="fi-dual-view">
+    <div className="fi-preview-section">
+      <div className="fi-section-header">
+        <span className="fi-section-badge fi-section-badge--builder">🏗 Wizard Builder</span>
+      </div>
+      {children}
+    </div>
+    
+    <div className="fi-divider">
+      <div className="fi-divider__line" />
+      <span className="fi-divider__text">End-User Preview</span>
+      <div className="fi-divider__line" />
+    </div>
+
+    <div className="fi-preview-section">
+      <div className="fi-section-header">
+        <span className="fi-section-badge fi-section-badge--preview">✨ Deal Wizard Preview</span>
+      </div>
+      <div style={{ padding: '24px', background: 'var(--background-primary)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}>
+        <DealWizardField field={field} />
+      </div>
+    </div>
+  </div>
+);
 
 // ─── Shared decorator: consistent with project standard ─────────────────────
 
-const meta: Meta<FieldItemProps> = {
+const meta: Meta<typeof FieldItem> = {
   title: 'Wizard Builder/FieldItem',
   component: FieldItem,
   parameters: {
@@ -35,13 +175,15 @@ const meta: Meta<FieldItemProps> = {
     };
 
     return (
-      <FieldItem 
-        {...args} 
-        field={field} 
-        isSelected={isSelected}
-        onSelect={() => updateArgs({ isSelected: !isSelected })}
-        onUpdate={handleUpdate} 
-      />
+      <DualView field={field}>
+        <FieldItem 
+          {...args} 
+          field={field} 
+          isSelected={isSelected}
+          onSelect={() => updateArgs({ isSelected: !isSelected })}
+          onUpdate={handleUpdate} 
+        />
+      </DualView>
     );
   },
 };
@@ -51,13 +193,14 @@ type Story = StoryObj<typeof meta>;
 
 // ━━━━━━ MOCK DATA GENERATOR ━━━━━━
 
-const createField = (type: string, label: string, extra = {}): FieldItemData => ({
+const createField = (type: FieldType, label: string, extra = {}): FieldItemData => ({
   id: `field-${Math.random().toString(36).substr(2, 9)}`,
-  fieldType: { type: type as any, label: type.charAt(0).toUpperCase() + type.slice(1), icon: type },
+  fieldType: { type, label: type.charAt(0).toUpperCase() + type.slice(1), icon: type },
   label,
   placeholder: 'Enter value',
   required: false,
   expanded: false,
+  acceptedFormats: type === 'image' ? '.jpg, .png, .jpeg' : undefined,
   ...extra,
 });
 
@@ -84,11 +227,7 @@ export const FileUpload: Story = {
 };
 
 export const ImageUpload: Story = {
-  args: { field: createField('image', 'Vehicle Photo', { buttonLabel: 'Upload Photo', maxFileSize: 2, enableCamera: false, expanded: true }) }
-};
-
-export const CameraEnabled: Story = {
-  args: { field: createField('image', 'Identity Proof', { buttonLabel: 'Capture Photo', enableCamera: true, expanded: true }) }
+  args: { field: createField('image', 'Vehicle Photo', { buttonLabel: 'Upload Photo', maxFileSize: 2, expanded: true }) }
 };
 
 export const DatePicker: Story = {
@@ -118,7 +257,7 @@ export const CanvasOverview: Story = {
   render: function Render() {
     const [fields, setFields] = React.useState<FieldItemData[]>([
       createField('text', 'VIN Number', { placeholder: 'Enter VIN', required: true }),
-      createField('image', 'Vehicle Exterior', { enableCamera: true, expanded: true }),
+      createField('image', 'Vehicle Exterior', { expanded: true }),
       createField('dropdown', 'Roadworthiness', { options: ['Roadworthy', 'Needs Repairs'], expanded: false }),
     ]);
     const [draggedId, setDraggedId] = React.useState<string | null>(null);
@@ -151,21 +290,58 @@ export const CanvasOverview: Story = {
     };
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {fields.map(f => (
-          <FieldItem 
-            key={f.id} 
-            field={f} 
-            isSelected={f.expanded}
-            onUpdate={handleUpdate}
-            onRemove={(id) => setFields(prev => prev.filter(item => item.id !== id))}
-            draggable
-            isDragging={draggedId === f.id}
-            onDragStart={() => handleDragStart(f.id)}
-            onDragOver={(e) => handleDragOver(e, f.id)}
-            onDragEnd={handleDragEnd}
-          />
-        ))}
+      <div className="fi-dual-view">
+        <div className="fi-preview-section">
+          <div className="fi-section-header">
+            <span className="fi-section-badge fi-section-badge--builder">🏗 Wizard Builder Canvas</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {fields.map(f => (
+              <FieldItem 
+                key={f.id} 
+                field={f} 
+                isSelected={f.expanded}
+                onUpdate={handleUpdate}
+                onRemove={(id) => setFields(prev => prev.filter(item => item.id !== id))}
+                draggable
+                isDragging={draggedId === f.id}
+                onDragStart={() => handleDragStart(f.id)}
+                onDragOver={(e) => handleDragOver(e, f.id)}
+                onDragEnd={handleDragEnd}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="fi-divider">
+          <div className="fi-divider__line" />
+          <span className="fi-divider__text">Deal Wizard Canvas</span>
+          <div className="fi-divider__line" />
+        </div>
+
+        <div className="fi-preview-section">
+          <div className="fi-section-header">
+            <span className="fi-section-badge fi-section-badge--preview">✨ Deal Wizard (Front-End)</span>
+          </div>
+          <div style={{ 
+            padding: '40px', 
+            background: 'var(--background-primary)', 
+            border: '1px solid var(--border-subtle)', 
+            borderRadius: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '32px'
+          }}>
+            <div style={{ marginBottom: '16px' }}>
+              <h2 className="title-page-size-small" style={{ margin: 0, fontWeight: 700 }}>Vehicle Inspection Form</h2>
+              <p className="fi-info__subtitle">Please complete the following details</p>
+            </div>
+            {fields.map(f => <DealWizardField key={f.id} field={f} />)}
+            <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--border-subtlest)' }}>
+              <Button size="large" style={{ width: '100%' }}>Submit details</Button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   },

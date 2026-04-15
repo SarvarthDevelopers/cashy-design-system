@@ -152,27 +152,44 @@ const TextExpandedBody = ({ field, onUpdate }: { field: FieldItemData; onUpdate:
         </div>
       </div>
     </div>
-    <div className="fi-section">
-      <div className="fi-section__title">Constraints</div>
-      <div className="fi-section__fields fi-section__fields--cols2">
-        <div className="fi-field-group">
-          <label className="fi-label">Placeholder</label>
-          <input className="fi-input" value={field.placeholder ?? ''} onChange={e => onUpdate(field.id, { placeholder: e.target.value })} />
-        </div>
-        <div className="fi-field-group">
-          <label className="fi-label">Default Value</label>
-          <input className="fi-input" value={field.defaultValue ?? ''} onChange={e => onUpdate(field.id, { defaultValue: e.target.value })} />
-        </div>
-        <div className="fi-field-group">
-          <label className="fi-label">Min Length</label>
-          <input className="fi-input" type="number" value={field.minLength ?? ''} onChange={e => onUpdate(field.id, { minLength: parseInt(e.target.value) || undefined })} />
-        </div>
-        <div className="fi-field-group">
-          <label className="fi-label">Max Length</label>
-          <input className="fi-input" type="number" value={field.maxLength ?? ''} onChange={e => onUpdate(field.id, { maxLength: parseInt(e.target.value) || undefined })} />
+    {field.fieldType.type !== 'toggle' && field.fieldType.type !== 'url' && field.fieldType.type !== 'date' && (
+      <div className="fi-section">
+        <div className="fi-section__title">Constraints</div>
+        <div className="fi-section__fields fi-section__fields--cols2">
+          <div className="fi-field-group">
+            <label className="fi-label">Placeholder</label>
+            <input className="fi-input" value={field.placeholder ?? ''} onChange={e => onUpdate(field.id, { placeholder: e.target.value })} />
+          </div>
+          <div className="fi-field-group">
+            <label className="fi-label">Default Value</label>
+            <input className="fi-input" value={field.defaultValue ?? ''} onChange={e => onUpdate(field.id, { defaultValue: e.target.value })} />
+          </div>
+          <div className="fi-field-group">
+            <label className="fi-label">Min Length</label>
+            <input className="fi-input" type="number" value={field.minLength ?? ''} onChange={e => onUpdate(field.id, { minLength: parseInt(e.target.value) || undefined })} />
+          </div>
+          <div className="fi-field-group">
+            <label className="fi-label">Max Length</label>
+            <input className="fi-input" type="number" value={field.maxLength ?? ''} onChange={e => onUpdate(field.id, { maxLength: parseInt(e.target.value) || undefined })} />
+          </div>
         </div>
       </div>
-    </div>
+    )}
+    {field.fieldType.type === 'url' && (
+      <div className="fi-section">
+        <div className="fi-section__title">Settings</div>
+        <div className="fi-section__fields fi-section__fields--cols2">
+          <div className="fi-field-group">
+            <label className="fi-label">Placeholder</label>
+            <input className="fi-input" value={field.placeholder ?? ''} onChange={e => onUpdate(field.id, { placeholder: e.target.value })} />
+          </div>
+          <div className="fi-field-group">
+            <label className="fi-label">Default URL</label>
+            <input className="fi-input" value={field.defaultValue ?? ''} onChange={e => onUpdate(field.id, { defaultValue: e.target.value })} />
+          </div>
+        </div>
+      </div>
+    )}
   </div>
 );
 
@@ -206,15 +223,6 @@ const FileExpandedBody = ({ field, onUpdate }: { field: FieldItemData; onUpdate:
           <label className="fi-label">Allowed Formats (e.g. .pdf,.zip)</label>
           <input className="fi-input" value={field.acceptedFormats ?? ''} onChange={e => onUpdate(field.id, { acceptedFormats: e.target.value })} />
         </div>
-        {field.fieldType.type === 'image' && (
-          <div className="fi-field-group">
-            <label className="fi-label">Camera Settings</label>
-            <button className="fi-required-footer" onClick={() => onUpdate(field.id, { enableCamera: !field.enableCamera })}>
-              <span className="fi-label" style={{ fontWeight: 400 }}>Enable Device Camera</span>
-              <div className={`fi-pill-toggle ${field.enableCamera ? 'fi-pill-toggle--on' : ''}`}><div className="fi-pill-toggle__handle" /></div>
-            </button>
-          </div>
-        )}
       </div>
     </div>
   </div>
@@ -234,10 +242,8 @@ const DropdownExpandedBody = ({ field, onUpdate }: { field: FieldItemData; onUpd
             <input className="fi-input" value={field.label} onChange={e => onUpdate(field.id, { label: e.target.value })} />
           </div>
           <div className="fi-field-group">
-            <button className="fi-required-footer" onClick={() => onUpdate(field.id, { allowMultiple: !field.allowMultiple })}>
-              <span className="fi-label" style={{ fontWeight: 400 }}>Allow multiple selections</span>
-              <div className={`fi-pill-toggle ${field.allowMultiple ? 'fi-pill-toggle--on' : ''}`}><div className="fi-pill-toggle__handle" /></div>
-            </button>
+            <label className="fi-label">Help Text / Description</label>
+            <input className="fi-input" value={field.helpText ?? ''} onChange={e => onUpdate(field.id, { helpText: e.target.value })} />
           </div>
         </div>
       </div>
@@ -331,6 +337,8 @@ export const FieldItem: React.FC<FieldItemProps> = ({
         else info = field.placeholder ? `Placeholder: ${field.placeholder}` : (field.required ? 'Required' : 'Optional');
         break;
       case 'dropdown':
+        info = `${field.options?.length || 0} options`;
+        break;
       case 'checkbox':
         info = `${field.options?.length || 0} options • ${field.allowMultiple ? 'Multi' : 'Single'}`;
         break;
