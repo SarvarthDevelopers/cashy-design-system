@@ -33,7 +33,6 @@ const DealWizardField = ({ field }: { field: FieldItemData }) => {
             options={(options || []).map(opt => ({ label: opt, value: opt }))}
             placeholder={placeholder || 'Select option'}
             helperText={helpText}
-            required={required}
           />
         );
       case 'checkbox':

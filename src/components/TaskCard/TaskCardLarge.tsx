@@ -1,7 +1,14 @@
 import React, { useCallback } from 'react';
 import './TaskCard.css';
+import { Priority } from '../Card/Priority';
 
 export type TaskPriority = 'high' | 'medium' | 'low';
+
+const PRIORITY_MAP: Record<TaskPriority, 'Highest' | 'Medium' | 'Lowest'> = {
+    high: 'Highest',
+    medium: 'Medium',
+    low: 'Lowest',
+};
 
 export interface TaskCardLargeProps extends React.HTMLAttributes<HTMLDivElement> {
     /** Unique task ID — displayed as #ID in the meta row. */
@@ -13,10 +20,10 @@ export interface TaskCardLargeProps extends React.HTMLAttributes<HTMLDivElement>
     /** Optional task description (max 160 characters). */
     description?: string;
     /**
-     * Visual priority level, derived from due date:
-     * - `high`   → due today   → red-50 background
-     * - `medium` → due tomorrow → blue-50 background
-     * - `low`    → other date  → white background
+     * Visual priority level:
+     * - `high`   → High priority arrow
+     * - `medium` → Medium priority arrow
+     * - `low`    → Low priority arrow
      * @default 'medium'
      */
     priority?: TaskPriority;
@@ -50,7 +57,7 @@ function formatDueDate(date: Date): string {
 
 /**
  * `TaskCardLarge` displays a single task inside a Kanban column.
- * Background colour is determined by the `priority` prop.
+ * Priority is displayed using an icon/arrow.
  */
 export const TaskCardLarge = React.forwardRef<HTMLDivElement, TaskCardLargeProps>((
     {
@@ -73,7 +80,6 @@ export const TaskCardLarge = React.forwardRef<HTMLDivElement, TaskCardLargeProps
 
     const rootClassName = [
         'task-card',
-        `task-card--priority-${priority}`,
         className,
     ].filter(Boolean).join(' ');
 
@@ -111,6 +117,9 @@ export const TaskCardLarge = React.forwardRef<HTMLDivElement, TaskCardLargeProps
             {/* Title */}
             <div className="task-card__row task-card__row--title">
                 <p className="task-card__title">{title}</p>
+                {priority && (
+                    <Priority type={PRIORITY_MAP[priority]} className="task-card__priority" />
+                )}
             </div>
 
             {/* Description (optional) */}
