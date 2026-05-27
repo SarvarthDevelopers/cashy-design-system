@@ -275,6 +275,7 @@ export const DateRangePicker = forwardRef<HTMLButtonElement, DateRangePickerProp
                     <div className={styles.triggerWrapper}>
                         <Popover.Trigger asChild>
                             <div
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 ref={ref as any}
                                 id={triggerId}
                                 role="button"
@@ -288,6 +289,7 @@ export const DateRangePicker = forwardRef<HTMLButtonElement, DateRangePickerProp
                                     ${disabled ? styles.disabled : ''}
                                     ${error ? styles.error : ''}
                                 `}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 {...props as any}
                             >
                                 <span className={styles.leftSection}>
