@@ -157,8 +157,8 @@
 }
 
 .tabs--segment .tab--selected {
-    background-color: var(--background-primary, #ffffff);
-    color: var(--text-primary);
+    background-color: var(--background-brand-solid, #17142b);
+    color: var(--text-white, #ffffff);
     box-shadow: 0px 1px 3px 0px rgba(16, 24, 40, 0.1), 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
 }
 
